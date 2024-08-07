@@ -15,12 +15,12 @@ function Count() {
       return newCount;
     });
   };
-
+ 
   useEffect(() => {
     if (count % 2 === 0) {
         alert ("We don reach even number")
     }
-  }, []);
+  }, [count]);
 
   return (
     <div>
