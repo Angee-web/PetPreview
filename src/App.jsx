@@ -82,8 +82,6 @@ function App() {
     return <h2>Loading...</h2>;
   }
 
-  console.log(pets);
-
   return (
     <Wrapper>
       {pets.map((pet) => (
@@ -98,6 +96,7 @@ function App() {
           </div>
         </StyledCard>
       ))}
+      
     </Wrapper>
   );
 }
