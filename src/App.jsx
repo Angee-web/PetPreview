@@ -2,12 +2,28 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 import styled from "styled-components";
+import PreviewPets from "./component/PreviewPets";
+import Button from "./component/Button";
 
 const Wrapper = styled.div`
-  margin: 0 auto;
   display: flex;
-  flex-wrap: wrap;
-  gap: 24px;
+
+  .petListContainer {
+    flex: 2;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    padding: 24px;
+    height: 100vh;
+    // overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .previewContainer {
+    flex: 1; /* Takes up half the space of the petListContainer component */
+    padding: 24px;
+    overflow-y: auto;
+  }
 `;
 
 const StyledCard = styled.div`
@@ -15,7 +31,7 @@ const StyledCard = styled.div`
   border-radius: 8px;
   background-color: #f9f9f9;
   width: 300px;
-  height: auto;
+  height: 550px;
 
   .imgContainer {
     width: 100%;
@@ -34,6 +50,7 @@ const StyledCard = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    gap: 8px;
   }
 
   h2 {
@@ -51,11 +68,19 @@ const StyledCard = styled.div`
     text-overflow: ellipsis;
     height: 92%;
   }
+
+  .preview {
+    height: 26px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
 `;
 
 function App() {
   const [pets, setPets] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [petPreview, setPetPreview] = useState({});
 
   const fetchPets = async () => {
     setIsLoading(true);
@@ -65,13 +90,17 @@ function App() {
       setPets(data.pets); //update the pet to render on the UI
 
       // Wait for 5 seconds to ensure the loading indicator stays visible
-      await new Promise((resolve) => setTimeout(resolve, 5000));
+      // await new Promise((resolve) => setTimeout(resolve, 5000));
       console.log(data.pets);
       setIsLoading(false);
     } catch (err) {
       console.log(err);
       setIsLoading(false);
     }
+  };
+
+  const handlePreview = (pet) => {
+    setPetPreview(pet);
   };
 
   useEffect(() => {
@@ -84,19 +113,31 @@ function App() {
 
   return (
     <Wrapper>
-      {pets.map((pet) => (
-        <StyledCard>
-          <div key={pet.id} className="imgContainer">
-            <img src={pet.images[0]} alt="placeholder image" />
-          </div>
+      <div className="petListContainer">
+        {pets.map((pet) => (
+          <StyledCard>
+            <div key={pet.id} className="imgContainer">
+              <img src={pet.images[0]} alt="placeholder image" />
+            </div>
 
-          <div className="textBody">
-            <h2>{pet.name}</h2>
-            <p>{pet.description}</p>
-          </div>
-        </StyledCard>
-      ))}
-      
+            <div className="textBody">
+              <h2>{pet.name}</h2>
+              <p>{pet.description}</p>
+              <Button
+                text="Preview"
+                bg="green"
+                color="white"
+                className="preview"
+                onClick={() => handlePreview(pet)}
+              />
+            </div>
+          </StyledCard>
+        ))}
+      </div>
+
+      <div className="previewContainer">
+        <PreviewPets petPreview={petPreview} />
+      </div>
     </Wrapper>
   );
 }

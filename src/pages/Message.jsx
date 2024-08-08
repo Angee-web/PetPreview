@@ -1,4 +1,6 @@
+// import usestate from react
 import { useState } from "react";
+// import styled to allow styling
 import styled from "styled-components";
 
 // using the styled components
